@@ -10,12 +10,12 @@ import '../features/login/controller/auth_controller.dart';
 
 class HttpService {
 
-  Future<dynamic> postApi(String uri, Object map) async {
+  Future<dynamic> postApi(String uri, [Object? map]) async {
     try {
       final context = Get.context;
       if (context == null) throw Exception('No valid context found');
 
-      final String userToken = Provider.of<AuthController>(context, listen: false).loginResponse!.token;
+      final String? userToken = Provider.of<AuthController>(context, listen: false).userToken;
       final String fullUrl = AppConstants.baseUrl + uri;
 
       print('POST API URL: $fullUrl');
@@ -41,7 +41,6 @@ class HttpService {
         // Optional: Handle unauthorized access
         print('Unauthorized. Token may be expired.');
         await Provider.of<AuthController>(context, listen: false).logout();
-        Provider.of<AuthController>(context, listen: false).clearSession();
         Navigator.of(context).pushAndRemoveUntil(
           CupertinoPageRoute(builder: (_) => const LoginScreen()),
               (route) => false,
@@ -58,7 +57,6 @@ class HttpService {
     } catch (e) {
       print("Unexpected error in postApi: $e");
     }
-
     return null; // return null on error
   }
 
@@ -67,7 +65,7 @@ class HttpService {
       final context = Get.context;
       if (context == null) throw Exception("No valid context found");
 
-      String userToken = Provider.of<AuthController>(context, listen: false).loginResponse!.token;
+      String? userToken = Provider.of<AuthController>(context, listen: false).userToken;
       final fullUrl = AppConstants.baseUrl + uri;
 
       print("API URL: $fullUrl");
@@ -86,7 +84,6 @@ class HttpService {
         return json.decode(response.body);
       } else if (response.statusCode == 401) {
         await Provider.of<AuthController>(context, listen: false).logout();
-        Provider.of<AuthController>(context, listen: false).clearSession();
         Navigator.of(context).pushAndRemoveUntil(
           CupertinoPageRoute(builder: (_) => const LoginScreen()),
               (route) => false,

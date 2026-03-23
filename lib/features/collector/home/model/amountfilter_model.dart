@@ -2,104 +2,52 @@ class CollectorAmountFilterModel {
   CollectorAmountFilterModel({
     required this.status,
     required this.message,
-    required this.collectorDetail,
+    required this.data,
   });
 
-  final bool status;
-  final String message;
-  final CollectorDetail? collectorDetail;
+  final bool? status;
+  final String? message;
+  final CollectorDetail? data;
 
   factory CollectorAmountFilterModel.fromJson(Map<String, dynamic> json){
     return CollectorAmountFilterModel(
-      status: json["status"] ?? false,
-      message: json["message"] ?? "",
-      collectorDetail: json["collector_detail"] == null ? null : CollectorDetail.fromJson(json["collector_detail"]),
+      status: json["status"],
+      message: json["message"],
+      data: json["data"] == null ? null : CollectorDetail.fromJson(json["data"]),
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    "status": status,
-    "message": message,
-    "collector_detail": collectorDetail?.toJson(),
-  };
 
 }
 
 class CollectorDetail {
   CollectorDetail({
-    required this.id,
-    required this.name,
-    required this.type,
-    required this.relCollectorId,
-    required this.relSdmId,
-    required this.district,
-    required this.email,
-    required this.mobile,
-    required this.password,
-    required this.temples,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.templeId,
+    required this.totalAmount,
     required this.cashAmount,
     required this.onlineAmount,
-    required this.totalAmount,
+    required this.startDate,
+    required this.endDate,
+    required this.totalOrders,
   });
 
-  final int id;
-  final String name;
-  final String type;
-  final dynamic relCollectorId;
-  final dynamic relSdmId;
-  final int district;
-  final String email;
-  final String mobile;
-  final String password;
-  final String temples;
-  final int status;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final int cashAmount;
-  final int onlineAmount;
-  final int totalAmount;
+  final dynamic templeId;
+  final dynamic totalAmount;
+  final dynamic cashAmount;
+  final dynamic onlineAmount;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final dynamic totalOrders;
 
   factory CollectorDetail.fromJson(Map<String, dynamic> json){
     return CollectorDetail(
-      id: json["id"] ?? 0,
-      name: json["name"] ?? "",
-      type: json["type"] ?? "",
-      relCollectorId: json["rel_collector_id"],
-      relSdmId: json["rel_sdm_id"],
-      district: json["district"] ?? 0,
-      email: json["email"] ?? "",
-      mobile: json["mobile"] ?? "",
-      password: json["password"] ?? "",
-      temples: json["temples"] ?? "",
-      status: json["status"] ?? 0,
-      createdAt: DateTime.tryParse(json["created_at"] ?? ""),
-      updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
-      cashAmount: json["cash_amount"] ?? 0,
-      onlineAmount: json["online_amount"] ?? 0,
-      totalAmount: json["total_amount"] ?? 0,
+      templeId: json["temple_id"],
+      totalAmount: json["total_amount"],
+      cashAmount: json["cash_amount"],
+      onlineAmount: json["online_amount"],
+      startDate: DateTime.tryParse(json["start_date"] ?? ""),
+      endDate: DateTime.tryParse(json["end_date"] ?? ""),
+      totalOrders: json["total_orders"],
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "type": type,
-    "rel_collector_id": relCollectorId,
-    "rel_sdm_id": relSdmId,
-    "district": district,
-    "email": email,
-    "mobile": mobile,
-    "password": password,
-    "temples": temples,
-    "status": status,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-    "cash_amount": cashAmount,
-    "online_amount": onlineAmount,
-    "total_amount": totalAmount,
-  };
 
 }

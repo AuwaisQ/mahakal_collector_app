@@ -1,7 +1,5 @@
 import 'package:collectorapp/features/login/controller/auth_controller.dart';
-import 'package:collectorapp/features/sdm/home/controller/sdmdashboard_controller.dart';
 import 'package:collectorapp/services/connectivity_service.dart';
-import 'package:collectorapp/services/rolebasedproviders.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,7 +9,6 @@ import 'features/collector/home/controller/collectordashboard_controller.dart';
 import 'features/collector/home/controller/collectordetails_controller.dart';
 import 'features/collector/home/controller/collectorsdmlist_controller.dart';
 import 'features/collector/home/controller/collectortemplelist_controller.dart';
-import 'features/sdm/home/controller/sdmdetails_controller.dart';
 import 'features/splash/controller/splash_controller.dart';
 import 'features/splash/splashscreen.dart';
 
@@ -34,14 +31,17 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ConnectivityService(),),
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => SplashController(),),
+        ChangeNotifierProvider(create: (_) => CollectorDashboardController(),),
+        ChangeNotifierProvider(create: (_) => CollectorDetailsController(),),
+        ChangeNotifierProvider(create: (_) => CollectorAmountFilterController(),),
+        ChangeNotifierProvider(create: (_) => CollectorSDMListController(),),
+        ChangeNotifierProvider(create: (_) => CollectorTempleListController(),),
 
       ],
-      child: RoleBasedProviders(
         child: GetMaterialApp(
           title: 'Collector App',
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
-        ),
       ),
     );
   }

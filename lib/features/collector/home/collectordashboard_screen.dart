@@ -21,9 +21,15 @@ class CollectorDashboardScreen extends StatefulWidget {
 }
 
 class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
+
+  String userType = "";
+
   @override
   void initState() {
     super.initState();
+    final auth = context.read<AuthController>();
+    userType = auth.userType ?? '';
+
     Future.microtask(() {
       context.read<CollectorDashboardController>().fetchCollectorDashboard();
     });
@@ -112,7 +118,7 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
 
           final data = collectorController.collectorDashModel;
 
-          if (data == null || data.collectorDetail!.templesDetail.isEmpty) {
+          if (data == null || data.data!.temples.isEmpty) {
             return const EmptyState(
               message: "No collector data found!",
               icon: Icons.collections_bookmark_outlined,
@@ -129,22 +135,22 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  expandedHeight: 130,
+                  expandedHeight: userType == "SDM" ? 130 : 150,
                   collapsedHeight: 80,
+                  automaticallyImplyLeading: false,
                   floating: false,
                   backgroundColor: Colors.transparent,
                   flexibleSpace: LayoutBuilder(
                     builder: (context, constraints) {
                       final top = constraints.biggest.height;
                       final isCollapsed = top <= 80;
-
                       return FlexibleSpaceBar(
                         collapseMode: CollapseMode.parallax,
                         centerTitle: false,
                         titlePadding: EdgeInsets.only(left: 20),
                         title: isCollapsed
                             ? Text(
-                                "${collectorController.collectorDashModel?.collectorDetail?.name?.split(' ').first ?? 'Collector'}",
+                                "${collectorController.collectorDashModel?.data?.name?.split(' ').first ?? 'Collector'}",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -183,7 +189,7 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
 
-                                    // Name with greeting
+                                    ///  Welcome + Logout Row
                                     Row(
                                       children: [
                                         Expanded(
@@ -191,122 +197,118 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
+                                                  text: "Welcome, ",
+                                                  style: TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: isCollapsed ? 12 : 16,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                TextSpan(
                                                   text:
-                                                      "${collectorController.collectorDashModel?.collectorDetail?.name ?? 'Collector'}",
+                                                  "${userType ?? 'Collector'}\n",
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: isCollapsed
-                                                        ? 16
-                                                        : 25,
-                                                    fontWeight: FontWeight.w800,
+                                                    fontSize: isCollapsed ? 16 : 22,
+                                                    fontWeight: FontWeight.bold,
+                                                    letterSpacing: 0.8,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                  "${collectorController.collectorDashModel?.data?.name ?? 'User'}",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: isCollapsed ? 14 : 20,
+                                                    fontWeight: FontWeight.w700,
                                                     fontStyle: FontStyle.italic,
-                                                    letterSpacing: 0.5,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
                                         ),
+
+                                        /// Logout Button
                                         Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white.withOpacity(0.15),
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
+                                            borderRadius: BorderRadius.circular(12),
                                             border: Border.all(
-                                              color: Colors.white.withOpacity(
-                                                0.3,
-                                              ),
+                                              color: Colors.white.withOpacity(0.3),
                                               width: 1,
                                             ),
                                           ),
                                           child: IconButton(
-                                            onPressed: () =>
-                                                _showLogoutDialog(context),
-                                            icon: Icon(
+                                            onPressed: () => _showLogoutDialog(context),
+                                            icon: const Icon(
                                               Icons.logout_rounded,
                                               color: Colors.white,
                                               size: 20,
                                             ),
-                                            splashRadius: 20,
-                                            padding: const EdgeInsets.all(10),
                                           ),
                                         ),
                                       ],
                                     ),
+                                    const SizedBox(height: 10),
 
-                                    // Active status and email row
+                                    ///  Email + Type Badge Row
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        // Email
+                                        Icon(Icons.email_outlined, color: Colors.white, size: 16),
+                                        const SizedBox(width: 6),
+
                                         Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.email_outlined,
-                                                    color: Colors.white,
-                                                    size: 16,
-                                                  ),
-                                                  const SizedBox(width: 6),
-                                                  Text(
-                                                    "${collectorController.collectorDashModel?.collectorDetail?.email ?? 'N/A'}",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                          child: Text(
+                                            "${collectorController.collectorDashModel?.data?.email ?? 'N/A'}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+
+                                        ///  TYPE BADGE
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.orangeAccent.withOpacity(0.9),
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Text(
+                                            userType ?? 'Collector',
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    //
-                                    // // Phone number
-                                    // Row(
-                                    //   children: [
-                                    //     Icon(
-                                    //       Icons.phone_iphone_rounded,
-                                    //       color: Colors.white.withOpacity(0.8),
-                                    //       size: 18,
-                                    //     ),
-                                    //     const SizedBox(width: 8),
-                                    //     Column(
-                                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                                    //       children: [
-                                    //         Text(
-                                    //           "PHONE",
-                                    //           style: TextStyle(
-                                    //             color: Colors.white.withOpacity(0.8),
-                                    //             fontSize: 11,
-                                    //             fontWeight: FontWeight.w600,
-                                    //             letterSpacing: 0.5,
-                                    //           ),
-                                    //         ),
-                                    //         const SizedBox(height: 2),
-                                    //         Text(
-                                    //           "${collectorController.collectorDashModel?.collectorDetail?.mobile ?? 'N/A'}",
-                                    //           style: TextStyle(
-                                    //             color: Colors.white,
-                                    //             fontSize: 16,
-                                    //             fontWeight: FontWeight.w700,
-                                    //           ),
-                                    //         ),
-                                    //       ],
-                                    //     ),
-                                    //   ],
-                                    // ),
+                                    const SizedBox(height: 8),
+
+                                    ///  Reported By (Stylish subtle text)
+                                    userType == "SDM" ? Row(
+                                      children: [
+                                        Icon(Icons.person_pin, color: Colors.white70, size: 14),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          "Reported to ${collectorController.collectorDashModel?.data?.reportingTo}",
+                                          style: TextStyle(
+                                            color: Colors.white.withOpacity(0.85),
+                                            fontSize: 12,
+                                            fontStyle: FontStyle.italic,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                      ],
+                                    ) : SizedBox.shrink()
                                   ],
                                 ),
 
@@ -331,8 +333,7 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   sliver: SliverGrid(
                     delegate: SliverChildBuilderDelegate((context, index) {
-                      final mandirList =
-                          collectorController.filteredTemples[index];
+                      final mandirList = collectorController.filteredTemples[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -408,7 +409,7 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
                     ],
                   ),
                   child: CachedNetworkImage(
-                    imageUrl: mandir.thumbnail,
+                    imageUrl: mandir.thumbnail ?? '',
                     height: 110, // Increased height
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -492,7 +493,7 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
                           children: [
                             // Main Temple Name
                             Text(
-                              mandir.name,
+                              mandir.name ?? '',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -522,50 +523,6 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
                 ),
               ),
 
-              // Decorative Top Right Badge
-              // Positioned(
-              //   top: 10,
-              //   right: 10,
-              //   child: Container(
-              //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              //     decoration: BoxDecoration(
-              //       color: Colors.white.withOpacity(0.15),
-              //       borderRadius: BorderRadius.circular(20),
-              //       border: Border.all(
-              //         color: Colors.white.withOpacity(0.3),
-              //         width: 1.5,
-              //       ),
-              //       boxShadow: [
-              //         BoxShadow(
-              //           color: Colors.black.withOpacity(0.2),
-              //           blurRadius: 8,
-              //           offset: const Offset(0, 2),
-              //         ),
-              //       ],
-              //     ),
-              //     child: Row(
-              //       children: [
-              //         Icon(
-              //           Icons.verified,
-              //           color: Colors.orange[300],
-              //           size: 14,
-              //         ),
-              //         const SizedBox(width: 4),
-              //         const Text(
-              //           'Temple',
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 10,
-              //             fontWeight: FontWeight.w600,
-              //             letterSpacing: 0.5,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-
-              // Glow Effect at Bottom
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -603,7 +560,7 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
                 const SizedBox(width: 5),
                 Expanded(
                   child: Text(
-                    "${mandir.cities?.city}",
+                    "${mandir.city}",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -624,18 +581,14 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
             child: Row(
               children: [
                 _badge(
-                  isMandirOpen(mandir.openingTime, mandir.closeingTime)
+                  isMandirOpen(mandir.openingTime ?? '', mandir.closeingTime ?? '')
                       ? "Open"
                       : "Closed",
-                  isMandirOpen(mandir.openingTime, mandir.closeingTime)
+                  isMandirOpen(mandir.openingTime ?? '', mandir.closeingTime ?? '')
                       ? Colors.green
                       : Colors.red,
                 ),
-
                 const SizedBox(width: 6),
-                // _badge("${mandir.id}",
-                //   Colors.blue,
-                // ),
               ],
             ),
           ),
@@ -662,7 +615,7 @@ class _CollectorDashboardScreenState extends State<CollectorDashboardScreen> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "${mandir.sdm?.name}",
+                      "View Details",
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
@@ -759,7 +712,7 @@ class _StatsHeaderDelegate extends SliverPersistentHeaderDelegate {
                       context,
                       Icons.people,
                       "Visitors Today",
-                      "${collectorDashboardController.collectorDashModel?.collectorDetail?.totalUser}",
+                      "${collectorDashboardController.collectorDashModel?.data?.totalUser}",
                       isScrolled: isScrolled,
                     ),
                   ),
@@ -769,7 +722,7 @@ class _StatsHeaderDelegate extends SliverPersistentHeaderDelegate {
                       context,
                       Icons.temple_hindu,
                       "Total Mandirs",
-                      "${collectorDashboardController.collectorDashModel?.collectorDetail?.totalTemple}",
+                      "${collectorDashboardController.collectorDashModel?.data?.totalTemple}",
                       isScrolled: isScrolled,
                     ),
                   ),
@@ -779,7 +732,7 @@ class _StatsHeaderDelegate extends SliverPersistentHeaderDelegate {
                       context,
                       Icons.currency_rupee,
                       "Total Amount",
-                      "${collectorDashboardController.collectorDashModel?.collectorDetail?.totalAmount}",
+                      "${collectorDashboardController.collectorDashModel?.data?.totalAmount}",
                       isScrolled: isScrolled,
                       isAmount: true
                     ),
@@ -882,7 +835,8 @@ class _StatsHeaderDelegate extends SliverPersistentHeaderDelegate {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
-                                      "${collectorDashboardController.collectorDashModel?.collectorDetail?.totalSdm} SDMs assigned",
+                                      "20",
+                                      //"${collectorDashboardController.collectorDashModel?.collectorDetail?.totalSdm} SDMs assigned",
                                       style: TextStyle(
                                         color: Colors.green.shade700,
                                         fontSize: 11,

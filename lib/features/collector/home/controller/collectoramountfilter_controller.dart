@@ -56,20 +56,22 @@ class CollectorAmountFilterController extends ChangeNotifier{
     required String templeId
   }) async {
     _setLoading(true);
-
     try {
-
       // Get date range based on filter type
       final dateRange = _getDateRange(filterType, selectedDate);
 
+      Map<String, dynamic> data = {
+        "start_date": "${dateRange['startDate']}",
+        "end_date": "${dateRange['endDate']}",
+        "temple_id": templeId
+      };
+
       // Create API URL with start and end date
-      final apiUrl = '${AppConstants.collectorAmountFilterAPI}'
-          'start_date=${dateRange['startDate']}&'
-          'end_date=${dateRange['endDate']}&temple_id=${templeId}';
+      final apiUrl = '${AppConstants.collectorAmountFilterAPI}';
 
       print("Amount Filter API URL: $apiUrl");
 
-      final res = await HttpService().getApi(apiUrl);
+      final res = await HttpService().postApi(apiUrl,data);
       print("Amount Filter Response $res");
 
       if(res != null){

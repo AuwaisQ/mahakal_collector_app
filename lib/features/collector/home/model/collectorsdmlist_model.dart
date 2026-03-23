@@ -2,34 +2,47 @@ class CollectorSdmListModel {
   CollectorSdmListModel({
     required this.status,
     required this.message,
-    required this.collectorId,
-    required this.totalSdm,
-    required this.sdmList,
+    required this.data,
   });
 
-  final bool status;
-  final String message;
-  final int collectorId;
-  final int totalSdm;
-  final List<SdmList> sdmList;
+  final bool? status;
+  final String? message;
+  final Data? data;
 
   factory CollectorSdmListModel.fromJson(Map<String, dynamic> json){
     return CollectorSdmListModel(
-      status: json["status"] ?? false,
-      message: json["message"] ?? "",
-      collectorId: json["collector_id"] ?? 0,
-      totalSdm: json["total_sdm"] ?? 0,
-      sdmList: json["sdm_list"] == null ? [] : List<SdmList>.from(json["sdm_list"]!.map((x) => SdmList.fromJson(x))),
+      status: json["status"],
+      message: json["message"],
+      data: json["data"] == null ? null : Data.fromJson(json["data"]),
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    "status": status,
-    "message": message,
-    "collector_id": collectorId,
-    "total_sdm": totalSdm,
-    "sdm_list": sdmList.map((x) => x?.toJson()).toList(),
-  };
+}
+
+class Data {
+  Data({
+    required this.seniorId,
+    required this.seniorName,
+    required this.seniorDesignation,
+    required this.totalJuniorOfficers,
+    required this.juniorOfficers,
+  });
+
+  final int? seniorId;
+  final String? seniorName;
+  final String? seniorDesignation;
+  final int? totalJuniorOfficers;
+  final List<SdmList> juniorOfficers;
+
+  factory Data.fromJson(Map<String, dynamic> json){
+    return Data(
+      seniorId: json["senior_id"],
+      seniorName: json["senior_name"],
+      seniorDesignation: json["senior_designation"],
+      totalJuniorOfficers: json["total_junior_officers"],
+      juniorOfficers: json["junior_officers"] == null ? [] : List<SdmList>.from(json["junior_officers"]!.map((x) => SdmList.fromJson(x))),
+    );
+  }
 
 }
 
@@ -39,39 +52,35 @@ class SdmList {
     required this.name,
     required this.email,
     required this.mobile,
-    required this.district,
-    required this.temples,
+    required this.designation,
+    required this.department,
+    required this.districtId,
+    required this.policeStationId,
     required this.createdAt,
   });
 
-  final int id;
-  final String name;
-  final String email;
-  final String mobile;
-  final dynamic district;
-  final String temples;
+  final int? id;
+  final String? name;
+  final String? email;
+  final String? mobile;
+  final String? designation;
+  final String? department;
+  final int? districtId;
+  final dynamic policeStationId;
   final DateTime? createdAt;
 
   factory SdmList.fromJson(Map<String, dynamic> json){
     return SdmList(
-      id: json["id"] ?? 0,
-      name: json["name"] ?? "",
-      email: json["email"] ?? "",
-      mobile: json["mobile"] ?? "",
-      district: json["district"],
-      temples: json["temples"] ?? "",
+      id: json["id"],
+      name: json["name"],
+      email: json["email"],
+      mobile: json["mobile"],
+      designation: json["designation"],
+      department: json["department"],
+      districtId: json["district_id"],
+      policeStationId: json["police_station_id"],
       createdAt: DateTime.tryParse(json["created_at"] ?? ""),
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "email": email,
-    "mobile": mobile,
-    "district": district,
-    "temples": temples,
-    "created_at": createdAt?.toIso8601String(),
-  };
 
 }

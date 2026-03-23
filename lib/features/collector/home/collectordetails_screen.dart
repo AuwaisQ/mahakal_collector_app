@@ -60,7 +60,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
 
           final data = collectorDetailsController.collectorDetailsModel;
 
-          if (data == null || data.temple == null) {
+          if (data == null || data.data == null) {
             return const EmptyState(
               message: "No mandir data found!",
               icon: Icons.collections_bookmark_outlined,
@@ -103,7 +103,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                         children: [
                           // Background Image with Gradient Overlay
                           CachedNetworkImage(
-                            imageUrl: "${data.temple?.thumbnail}",
+                            imageUrl: "${data.data?.thumbnail}",
                             height: 200,
                             width: double.infinity,
                             fit: BoxFit.fill,
@@ -171,7 +171,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
-                                          '${data.temple?.name}',
+                                          '${data.data?.name}',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 22,
@@ -268,7 +268,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(
-                                "${data.temple?.cities?.city}, ${data.temple?.states?.name}",
+                                "${data.data?.city}, ${data.data?.state}",
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
@@ -290,7 +290,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              "Open: ${formatTime("${data.temple?.openingTime}")}",
+                              "Open: ${formatTime("${data.data?.openingTime}")}",
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF4B5563),
@@ -305,7 +305,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              "Close: ${formatTime("${data.temple?.closeingTime}")}",
+                              "Close: ${formatTime("${data.data?.closeingTime}")}",
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF4B5563),
@@ -345,56 +345,6 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                      ],
                    ),
                  ),
-                 // Replace your existing Container with this
-                  //_titleWidget("Payment Summary", Icons.monetization_on_outlined),
-                  //const SizedBox(height: 12),
-                  // Container(
-                  //   padding: const EdgeInsets.all(16),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(16),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.grey.withOpacity(0.1),
-                  //         blurRadius: 20,
-                  //         offset: const Offset(0, 4),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       Expanded(
-                  //         child: _paymentStatCard(
-                  //           title: "Cash",
-                  //           value: "${data.collectionSummary?.cashAmount}",
-                  //           icon: Icons.currency_rupee_rounded,
-                  //           color: const Color(0xFF10B981),
-                  //           iconBg: const Color(0xFFD1FAE5),
-                  //         ),
-                  //       ),
-                  //       Container(width: 1, height: 50, color: Colors.grey[200]),
-                  //       Expanded(
-                  //         child: _paymentStatCard(
-                  //           title: "Online",
-                  //           value: "${data.collectionSummary?.onlineAmount}",
-                  //           icon: Icons.phone_iphone,
-                  //           color: const Color(0xFF3B82F6),
-                  //           iconBg: const Color(0xFFDBEAFE),
-                  //         ),
-                  //       ),
-                  //       Container(width: 1, height: 50, color: Colors.grey[200]),
-                  //       Expanded(
-                  //         child: _paymentStatCard(
-                  //           title: "Total",
-                  //           value: "${data.collectionSummary?.totalAmount}",
-                  //           icon: Icons.account_balance_wallet,
-                  //           color: const Color(0xFF8B5CF6),
-                  //           iconBg: const Color(0xFFEDE9FE),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   const SizedBox(height: 24),
 
                   /// VISITOR SUMMARY
@@ -405,7 +355,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                       Expanded(
                         child: _visitorStatCard(
                           title: "Verified",
-                          count: "${data.collectionSummary?.verifiedUser}",
+                          count: "${data.data?.collectionSummary?.bhojanAmount}",
                           color: const Color(0xFF10B981),
                           iconBg: const Color(0xFFD1FAE5),
                         ),
@@ -414,7 +364,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                       Expanded(
                         child: _visitorStatCard(
                           title: "Unverified",
-                          count: "${data.collectionSummary?.unverifiedUser}",
+                          count: "${data.data?.collectionSummary?.bhojanAmount}",
                           color: const Color(0xFFEF4444),
                           iconBg: const Color(0xFFFEE2E2),
                         ),
@@ -423,7 +373,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                       Expanded(
                         child: _visitorStatCard(
                           title: "Total",
-                          count: "${data.collectionSummary?.totalUser}",
+                          count: "${data.data?.collectionSummary?.totalUser}",
                           color: const Color(0xFF3B82F6),
                           iconBg: const Color(0xFFDBEAFE),
                         ),
@@ -457,7 +407,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                             Expanded(
                               child: _quickStatItem(
                                 label: "Puja Amount",
-                                value: "${data.collectionSummary?.pujaAmount}",
+                                value: "${data.data?.collectionSummary?.pujaAmount}",
                                 icon: Icons.yard,
                                 color: const Color(0xFF3B82F6),
                               ),
@@ -466,7 +416,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                             Expanded(
                               child: _quickStatItem(
                                 label: "Darshan Amount",
-                                value: "${data.collectionSummary?.darshanAmount}",
+                                value: "${data.data?.collectionSummary?.darshanAmount}",
                                 icon: Icons.remove_red_eye_rounded,
                                 color: const Color(0xFF10B981),
                               ),
@@ -480,7 +430,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                             Expanded(
                               child: _quickStatItem(
                                 label: "Locker Amount",
-                                value: "${data.collectionSummary?.lockerAmount}",
+                                value: "${data.data?.collectionSummary?.lockerAmount}",
                                 icon: Icons.lock_clock,
                                 color: const Color(0xFF8B5CF6),
                               ),
@@ -489,7 +439,7 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
                             Expanded(
                               child: _quickStatItem(
                                 label: "Bhojan Amount",
-                                value: "${data.collectionSummary?.bhojanAmount}",
+                                value: "${data.data?.collectionSummary?.bhojanAmount}",
                                 icon: Icons.emoji_food_beverage,
                                 color: const Color(0xFFF59E0B),
                               ),
@@ -657,7 +607,6 @@ class _CollectorDetailsScreenState extends State<CollectorDetailsScreen> {
     );
   }
 
-
   Widget _titleWidget(String title, IconData icon) {
     return Row(
       children: [
@@ -816,7 +765,7 @@ class _AmountCardsWithFilterState extends State<AmountCardsWithFilter> {
     filterController.fetchAmountFilter(
       filterType: _currentFilter,
       selectedDate: _selectedDate!
-      , templeId: '${widget.data.temple?.id}',
+      , templeId: '${widget.data.data?.id}',
     );
   }
 
@@ -847,27 +796,27 @@ class _AmountCardsWithFilterState extends State<AmountCardsWithFilter> {
 
   String _getCashAmount(dynamic data) {
     if (data is CollectorAmountFilterModel) {
-      return "${data.collectorDetail?.cashAmount ?? 0}";
+      return "${data.data?.cashAmount ?? 0}";
     } else if (data is CollectorDetailsModel) {
-      return "${data.collectionSummary?.cashAmount ?? 0}";
+      return "${data.data?.collectionSummary?.cashAmount ?? 0}";
     }
     return "0";
   }
 
   String _getOnlineAmount(dynamic data) {
     if (data is CollectorAmountFilterModel) {
-      return "${data.collectorDetail?.onlineAmount ?? 0}";
+      return "${data.data?.onlineAmount ?? 0}";
     } else if (data is CollectorDetailsModel) {
-      return "${data.collectionSummary?.onlineAmount ?? 0}";
+      return "${data.data?.collectionSummary?.onlineAmount ?? 0}";
     }
     return "0";
   }
 
   String _getTotalAmount(dynamic data) {
     if (data is CollectorAmountFilterModel) {
-      return "${data.collectorDetail?.totalAmount ?? 0}";
+      return "${data.data?.totalAmount ?? 0}";
     } else if (data is CollectorDetailsModel) {
-      return "${data.collectionSummary?.totalAmount ?? 0}";
+      return "${data.data?.collectionSummary?.totalAmount ?? 0}";
     }
     return "0";
   }

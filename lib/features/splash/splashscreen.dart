@@ -58,35 +58,36 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  // Future<void> _navigateToHome() async {
+  //   final auth = Provider.of<AuthController>(context, listen: false);
+  //
+  //   if (!mounted) return;
+  //
+  //  // if (auth.type == 'sdm') {
+  //   //   Navigator.pushReplacement(
+  //   //     context,
+  //   //     MaterialPageRoute(builder: (_) => SDMDashboardScreen()),
+  //   //   );
+  //   // } else if (auth.type == 'collector') {
+  //   //   Navigator.pushReplacement(
+  //   //     context,
+  //   //     MaterialPageRoute(builder: (_) => CollectorDashboardScreen()),
+  //   //   );
+  //   //}
+  //  // else {
+  //     _navigateToLogin();
+  //   }
+  // }
+
+
   Future<void> _navigateToHome() async {
-    final auth = Provider.of<AuthController>(context, listen: false);
-
-    if (!mounted) return;
-
-    if (auth.type == 'sdm') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => SDMDashboardScreen()),
-      );
-    } else if (auth.type == 'collector') {
+    if (mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => CollectorDashboardScreen()),
       );
-    } else {
-      _navigateToLogin();
     }
   }
-
-
-  // Future<void> _navigateToHome() async {
-  //   if (mounted) {
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(builder: (_) => CollectorDashboardScreen()),
-  //     );
-  //   }
-  // }
 
   Future<void> _navigateToLogin() async {
     if (mounted) {

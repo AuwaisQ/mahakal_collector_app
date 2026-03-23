@@ -3,10 +3,10 @@ import 'package:collectorapp/features/collector/home/templelist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../ui_helpers/empty_widget.dart';
+import '../../login/controller/auth_controller.dart';
 import 'controller/collectorsdmlist_controller.dart';
 
 class SDMListScreen extends StatefulWidget {
-
   const SDMListScreen({Key? key,}) : super(key: key);
 
   @override
@@ -15,396 +15,152 @@ class SDMListScreen extends StatefulWidget {
 
 class _SDMListScreenState extends State<SDMListScreen> {
 
+  String userType = "";
+
   @override
   void initState() {
+    final auth = context.read<AuthController>();
+    userType = auth.userType ?? '';
+
+    print("UserType $userType");
+
     super.initState();
     Future.microtask(() {context.read<CollectorSDMListController>().fetchCollectorSDMList();});
   }
 
-  Widget SDMCard({required List<SdmList> sdmListData, required int index,required colletId}) {
+  Widget SDMCard({
+    required List<SdmList> sdmListData,
+    required int index,
+    required colletId,
+  }) {
+    final sdm = sdmListData[index];
+
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.grey.shade200,
-        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 25,
-            spreadRadius: 2,
-            offset: Offset(0, 8),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () {
-            // Navigate to SDM details screen
-            Navigator.push(context, MaterialPageRoute(builder: (_) => TempleListScreen(collectId: '${colletId}', sdmId: '${sdmListData[index].id}',)));
-          },
-          splashColor: Color(0xFFFF6B35).withOpacity(0.1),
-          highlightColor: Colors.transparent,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => TempleListScreen(templeId: '${sdm.id}',),
+            ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            ///  NAME + DESIGNATION
+            Row(
               children: [
-                // Top Row: Avatar and Info
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    // Avatar with index
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFFFF6B35),
-                            Color(0xFFFFA62E),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFFFF6B35).withOpacity(0.3),
-                            blurRadius: 10,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          "#${index + 1}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
+                Expanded(
+                  child: Text(
+                    sdm.name ?? "",
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
                     ),
-                    SizedBox(width: 16),
-
-                    // SDM Info
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Name and Status
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "${sdmListData[index].name}",
-                                  style: TextStyle(
-                                    color: Colors.grey.shade900,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-
-                          // Email
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.email_outlined,
-                                color: Colors.grey.shade600,
-                                size: 14,
-                              ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  "${sdmListData[index].email}",
-                                  style: TextStyle(
-                                    color: Colors.grey.shade700,
-                                    fontSize: 14,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 6),
-
-                          // Phone
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.phone_iphone_rounded,
-                                color: Colors.grey.shade600,
-                                size: 14,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                "${sdmListData[index].mobile}",
-                                style: TextStyle(
-                                  color: Colors.grey.shade700,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-                SizedBox(height: 20),
 
-                // Stats and Actions
+                /// Badge
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.grey.shade200,
+                    color: Colors.orange.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    sdm.designation ?? "",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.deepOrange,
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Temples Count
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.orange.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              Icons.temple_buddhist_rounded,
-                              color: Color(0xFFFF6B35),
-                              size: 22,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            "Temples",
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "${sdmListData[index].id}",
-                            style: TextStyle(
-                              color: Colors.grey.shade900,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // District
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              Icons.location_city_rounded,
-                              color: Colors.blue,
-                              size: 22,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            "District",
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "${sdmListData[index].district}",
-                            style: TextStyle(
-                              color: Colors.grey.shade900,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Action Buttons
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.purple.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              Icons.remove_red_eye_rounded,
-                              color: Colors.purple,
-                              size: 22,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            "View",
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFFF6B35),
-                                  Color(0xFFFFA62E),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              "Details",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
                 ),
-                SizedBox(height: 16),
-
-                // Bottom Actions
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     // Call Button
-                //     Container(
-                //       width: 40,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //         color: Colors.green.withOpacity(0.1),
-                //         borderRadius: BorderRadius.circular(10),
-                //       ),
-                //       child: IconButton(
-                //         onPressed: () {
-                //           // Call functionality
-                //           // _makeCall(sdm['mobile']);
-                //         },
-                //         icon: Icon(
-                //           Icons.call_outlined,
-                //           color: Colors.green,
-                //           size: 18,
-                //         ),
-                //         padding: EdgeInsets.zero,
-                //       ),
-                //     ),
-                //
-                //     SizedBox(width: 12),
-                //
-                //     // Message Button
-                //     Container(
-                //       width: 40,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //         color: Colors.blue.withOpacity(0.1),
-                //         borderRadius: BorderRadius.circular(10),
-                //       ),
-                //       child: IconButton(
-                //         onPressed: () {
-                //           // Message functionality
-                //           // _sendMessage(sdm['mobile']);
-                //         },
-                //         icon: Icon(
-                //           Icons.message_outlined,
-                //           color: Colors.blue,
-                //           size: 18,
-                //         ),
-                //         padding: EdgeInsets.zero,
-                //       ),
-                //     ),
-                //
-                //     SizedBox(width: 12),
-                //
-                //     // More Options
-                //     Container(
-                //       width: 40,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //         color: Colors.grey.withOpacity(0.1),
-                //         borderRadius: BorderRadius.circular(10),
-                //       ),
-                //       child: PopupMenuButton(
-                //         itemBuilder: (context) => [
-                //           PopupMenuItem(
-                //             child: Row(
-                //               children: [
-                //                 Icon(Icons.edit, color: Colors.blue, size: 18),
-                //                 SizedBox(width: 8),
-                //                 Text("Edit"),
-                //               ],
-                //             ),
-                //           ),
-                //           PopupMenuItem(
-                //             child: Row(
-                //               children: [
-                //                 Icon(Icons.delete, color: Colors.red, size: 18),
-                //                 SizedBox(width: 8),
-                //                 Text("Remove"),
-                //               ],
-                //             ),
-                //           ),
-                //         ],
-                //         child: Icon(
-                //           Icons.more_vert_rounded,
-                //           color: Colors.grey.shade700,
-                //           size: 20,
-                //         ),
-                //         padding: EdgeInsets.zero,
-                //       ),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
-          ),
-        )
+
+            const SizedBox(height: 10),
+
+            ///  EMAIL
+            Text(
+              sdm.email ?? "",
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade700,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+
+            const SizedBox(height: 6),
+
+            ///  MOBILE
+            Text(
+              sdm.mobile ?? "",
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 6),
+
+            ///  DEPARTMENT
+            Text(
+              sdm.department ?? "",
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade600,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            /// VIEW TEXT (simple)
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "View Details →",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.orange.shade700,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  ///  Reusable icon button
+  Widget _iconBtn(IconData icon, Color color) {
+    return Container(
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(icon, color: color, size: 18),
     );
   }
 
@@ -423,9 +179,9 @@ class _SDMListScreenState extends State<SDMListScreen> {
 
           final data = collectorSDMListController.collectorSdmListModel;
 
-          if (data == null || data.sdmList.isEmpty) {
+          if (data == null || data.data!.juniorOfficers.isEmpty) {
             return const EmptyState(
-              message: "No collector data found!",
+              message: "No Data found!",
               icon: Icons.collections_bookmark_outlined,
             );
           }
@@ -485,12 +241,12 @@ class _SDMListScreenState extends State<SDMListScreen> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 20),
+                                const SizedBox(width: 18),
                                 Text(
-                                  "SDM Management",
+                                  userType == "Collector" ? "SDM Management" : "Employee Management",
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 24,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 0.5,
                                   ),
@@ -533,7 +289,7 @@ class _SDMListScreenState extends State<SDMListScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Total SDMs",
+                                          userType == "Collector" ? "Total SDMs" : "Total Employe's",
                                           style: TextStyle(
                                             color: Colors.white.withOpacity(0.9),
                                             fontSize: 14,
@@ -541,7 +297,7 @@ class _SDMListScreenState extends State<SDMListScreen> {
                                           ),
                                         ),
                                         Text(
-                                         "${data.totalSdm}",
+                                         "${data.data!.totalJuniorOfficers}",
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 28,
@@ -582,7 +338,7 @@ class _SDMListScreenState extends State<SDMListScreen> {
 
               SliverPersistentHeader(
                 pinned: true,
-                delegate: _StatsHeaderDelegate(),
+                delegate: _StatsHeaderDelegate(userType),
               ),
 
               //SDM Cards List
@@ -597,7 +353,7 @@ class _SDMListScreenState extends State<SDMListScreen> {
                       child: SDMCard(
                         sdmListData: collectorSDMListController.filterCollectorSdmList,
                         index: index,
-                        colletId: collectorSDMListController.collectorSdmListModel?.collectorId
+                        colletId: collectorSDMListController.collectorSdmListModel?.data!.seniorId
                       ),
                     );
                   },
@@ -617,7 +373,8 @@ class _SDMListScreenState extends State<SDMListScreen> {
 
 class _StatsHeaderDelegate extends SliverPersistentHeaderDelegate {
 
-  _StatsHeaderDelegate();
+  String userType = "";
+  _StatsHeaderDelegate(this.userType);
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -654,7 +411,7 @@ class _StatsHeaderDelegate extends SliverPersistentHeaderDelegate {
                             collectorSDMController.searchSDMList(value);
                           },
                           decoration: InputDecoration(
-                            hintText: "Search SDM by name, email...",
+                            hintText:  userType == "Collector" ? "Search SDM by name, email..." : "Search Employe by name, email...",
                             hintStyle: TextStyle(
                               color: Colors.grey.shade500,
                             ),

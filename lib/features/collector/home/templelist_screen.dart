@@ -6,9 +6,8 @@ import 'collectordetails_screen.dart';
 import 'controller/collectortemplelist_controller.dart';
 
 class TempleListScreen extends StatefulWidget {
-  final String collectId;
-  final String sdmId;
-  const TempleListScreen({Key? key, required this.collectId, required this.sdmId}) : super(key: key);
+  final String templeId;
+  const TempleListScreen({Key? key, required this.templeId}) : super(key: key);
 
   @override
   State<TempleListScreen> createState() => _TempleListScreenState();
@@ -23,8 +22,7 @@ class _TempleListScreenState extends State<TempleListScreen> {
     super.initState();
     Future.microtask(() {
       context.read<CollectorTempleListController>().fetchCollectorTempleList(
-        widget.collectId,
-        widget.sdmId,
+        widget.templeId,
       );
     });
   }
@@ -648,7 +646,7 @@ class TempleGridCard extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => CollectorDetailsScreen(
-                  mandirId: '${temple.id}',
+                  mandirId: '${temple.templeId}',
                 ),
               ),
             );
@@ -825,7 +823,7 @@ class TempleListCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CollectorDetailsScreen(mandirId: '${temple[index].id}',),
+                builder: (context) => CollectorDetailsScreen(mandirId: '${temple[index].templeId}',),
               ),
             );
           },
@@ -842,7 +840,7 @@ class TempleListCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     image: temple[index] != null
                         ? DecorationImage(
-                      image: NetworkImage(temple[index].thumbnail),
+                      image: NetworkImage(temple[index].thumbnail ?? ''),
                       fit: BoxFit.cover,
                     )
                         : null,

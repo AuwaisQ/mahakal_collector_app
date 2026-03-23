@@ -17,13 +17,15 @@ class AppConstants {
       : 'rzp_live_InwZruBPIWObnO'; // Others (like prod) → Live key
 
   /// Mahakal Collector
-  static const loginAPI = "$apiVersion/collector/login";
+  static const loginAPI = "$apiVersion/department/login";
+
   static const logoutAPI = "$apiVersion/collector/logout";
-  static const collectorDashboardAPI = "$apiVersion/collector/dashboard";
-  static const collectorDetailsAPI = "$apiVersion/collector/temple/detail?temple_id=";
-  static const collectorSDMListAPI = "$apiVersion/collector/collector-sdm-list";
-  static const collectorTempleListAPI = "$apiVersion/collector/sdm-temple-list";
-  static const collectorAmountFilterAPI = "$apiVersion/collector/datewise/amount?";
+  static const collectorDashboardAPI = "$apiVersion/department/dashboard";
+  static const collectorDetailsAPI = "$apiVersion/department/temples/";
+
+  static const collectorSDMListAPI = "$apiVersion/department/junior-officers";
+  static const collectorTempleListAPI = "$apiVersion/department/junior-officer/";
+  static const collectorAmountFilterAPI = "$apiVersion/department/datewise-amount";
 
 
   /// SDM API

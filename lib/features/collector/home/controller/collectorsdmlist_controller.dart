@@ -24,7 +24,7 @@ class CollectorSDMListController extends ChangeNotifier{
 
       if(res !=null){
         _collectorSdmListModel = CollectorSdmListModel.fromJson(res);
-        _filterCollectorSdmList = _collectorSdmListModel!.sdmList;
+        _filterCollectorSdmList = _collectorSdmListModel!.data!.juniorOfficers;
       }
     }catch (e, stackTrace) {
       debugPrint("Error fetching collector details: $e");
@@ -37,14 +37,14 @@ class CollectorSDMListController extends ChangeNotifier{
   void searchSDMList(String query) {
     _searchQuery = query;
 
-    if (_collectorSdmListModel?.sdmList != null) {
+    if (_collectorSdmListModel!.data!.juniorOfficers != null) {
       if (query.isEmpty) {
-        _filterCollectorSdmList = _collectorSdmListModel?.sdmList ?? [];
+        _filterCollectorSdmList = _collectorSdmListModel?.data!.juniorOfficers ?? [];
       } else {
-        _filterCollectorSdmList = _collectorSdmListModel!.sdmList
+        _filterCollectorSdmList = _collectorSdmListModel!.data!.juniorOfficers
             .where(
               (temple) =>
-              temple.name.toLowerCase().contains(query.toLowerCase()),
+              temple.name!.toLowerCase().contains(query.toLowerCase()),
         )
             .toList();
       }

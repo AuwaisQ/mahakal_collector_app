@@ -21,7 +21,7 @@ class CollectorDashboardController extends ChangeNotifier {
     _setLoading(true);
 
     try {
-      final res = await HttpService().getApi(
+      final res = await HttpService().postApi(
         AppConstants.collectorDashboardAPI,
       );
 
@@ -29,7 +29,7 @@ class CollectorDashboardController extends ChangeNotifier {
 
       if (res != null) {
         _collectorDashModel = CollectorDashModel.fromJson(res);
-        _filteredTemples = _collectorDashModel?.collectorDetail?.templesDetail ?? [];
+        _filteredTemples = _collectorDashModel?.data?.temples ?? [];
       }
     } catch (e, stackTrace) {
       debugPrint("Error fetching collector dashboard: $e");
@@ -43,14 +43,14 @@ class CollectorDashboardController extends ChangeNotifier {
   void upDateSearchQuery(String query) {
     _searchQuery = query;
 
-    if (_collectorDashModel?.collectorDetail?.templesDetail != null) {
+    if (_collectorDashModel?.data?.temples != null) {
       if (query.isEmpty) {
-        _filteredTemples = _collectorDashModel?.collectorDetail?.templesDetail ?? [];
+        _filteredTemples = _collectorDashModel?.data?.temples?? [];
       } else {
-        _filteredTemples = _collectorDashModel!.collectorDetail!.templesDetail
+        _filteredTemples = _collectorDashModel!.data!.temples
             .where(
               (temple) =>
-                  temple.name.toLowerCase().contains(query.toLowerCase()),
+                  temple.name!.toLowerCase().contains(query.toLowerCase()),
             )
             .toList();
       }
