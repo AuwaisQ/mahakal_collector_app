@@ -480,7 +480,7 @@ class AuthController with ChangeNotifier {
           'password': password,
         }),
       ).timeout(const Duration(seconds: 15));
-
+      print("api login ==>>> ${response} ${response.body}");
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         _loginResponse = LoginModel.fromJson(data);

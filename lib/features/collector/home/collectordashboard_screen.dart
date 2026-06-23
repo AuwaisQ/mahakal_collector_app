@@ -811,7 +811,7 @@ class _StatsHeaderDelegate extends SliverPersistentHeaderDelegate {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "MANAGE SDMs",
+                                    "MANAGE Employees",
                                     style: TextStyle(
                                       color: Color(0xFFFF6B35),
                                       fontSize: 17,
@@ -823,29 +823,29 @@ class _StatsHeaderDelegate extends SliverPersistentHeaderDelegate {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    "View all SDMs under jurisdiction",
+                                    "View all Employees under jurisdiction",
                                     style: TextStyle(
                                       color: Colors.grey.shade700,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 1,
+                                    maxLines: 2,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      "20",
-                                      //"${collectorDashboardController.collectorDashModel?.collectorDetail?.totalSdm} SDMs assigned",
-                                      style: TextStyle(
-                                        color: Colors.green.shade700,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        overflow: TextOverflow.ellipsis
-                                      ),
-                                      maxLines: 1,
-                                    ),
-                                  ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(top: 4),
+                                  //   child: Text(
+                                  //     "20",
+                                  //     //"${collectorDashboardController.collectorDashModel?.collectorDetail?.totalSdm} SDMs assigned",
+                                  //     style: TextStyle(
+                                  //       color: Colors.green.shade700,
+                                  //       fontSize: 11,
+                                  //       fontWeight: FontWeight.w600,
+                                  //       overflow: TextOverflow.ellipsis
+                                  //     ),
+                                  //     maxLines: 1,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ],

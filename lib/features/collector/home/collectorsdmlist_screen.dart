@@ -242,7 +242,7 @@ class _SDMListScreenState extends State<SDMListScreen> {
                                   ),
                                 ),
                                 const SizedBox(width: 18),
-                                Text(
+                                 Text(
                                   userType == "Collector" ? "SDM Management" : "Employee Management",
                                   style: TextStyle(
                                     color: Colors.white,
